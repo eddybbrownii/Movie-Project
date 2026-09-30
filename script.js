@@ -4,9 +4,13 @@ const searchInput = document.getElementById ('searchInput');
 const resultsContainer = document.getElementById ('results');
 const statusEl = document.getElementById ('status');
 const suggestionsEl = document.getElementById ('suggestions');
+const typeFilter = document.getElementById ('typeFilter');
+const sortSelect = document.getElementById ('sortSelect');
+const yearFilter = document.getElementById ('yearFilter');
 
 let suggestionResults = [];
 let selectedSuggestionIndex = -1;
+let currentResults = [];
 
 function showSuggestions (items) {
   if (!items || items.length === 0) {
@@ -158,6 +162,76 @@ window.matchMedia &&
       }
     });
 
+function populateYearFilter (items) {
+  const years = [
+    ...new Set (
+      items
+        .map (item => Number (item.Year))
+        .filter (year => Number.isInteger (year) && year > 0)
+        .sort ((a, b) => b - a)
+    ),
+  ];
+
+  const currentYear = yearFilter.value;
+  yearFilter.innerHTML =
+    '<option value="all">All years</option>' +
+    years.map (year => `<option value="${year}">${year}</option>`).join ('');
+
+  if (years.includes (Number (currentYear))) {
+    yearFilter.value = String (currentYear);
+  } else {
+    yearFilter.value = 'all';
+  }
+}
+
+function sortAndFilterResults (items) {
+  const typeValue = typeFilter.value;
+  const yearValue = yearFilter.value;
+  const sortValue = sortSelect.value;
+
+  let filtered = [...items];
+
+  if (typeValue !== 'all') {
+    filtered = filtered.filter (
+      item => item.Type && item.Type.toLowerCase () === typeValue
+    );
+  }
+
+  if (yearValue !== 'all') {
+    filtered = filtered.filter (
+      item => Number (item.Year) === Number (yearValue)
+    );
+  }
+
+  if (sortValue === 'year-desc') {
+    filtered.sort ((a, b) => Number (b.Year || 0) - Number (a.Year || 0));
+  } else if (sortValue === 'year-asc') {
+    filtered.sort ((a, b) => Number (a.Year || 0) - Number (b.Year || 0));
+  } else if (sortValue === 'title-asc') {
+    filtered.sort ((a, b) => a.Title.localeCompare (b.Title));
+  }
+
+  return filtered;
+}
+
+function applyCurrentResults () {
+  const processed = sortAndFilterResults (currentResults);
+  renderResults (processed);
+
+  const count = processed.length;
+  const typeLabel = typeFilter.value === 'all' ? 'all types' : typeFilter.value;
+  const yearLabel = yearFilter.value === 'all'
+    ? 'all years'
+    : `year ${yearFilter.value}`;
+  statusEl.textContent = `Showing ${Math.min (count, 6)} ${typeLabel} results for ${yearLabel}`;
+}
+
+function setControls () {
+  typeFilter.value = 'all';
+  yearFilter.value = 'all';
+  sortSelect.value = 'relevance';
+}
+
 function renderResults (items) {
   if (!items || items.length === 0) {
     resultsContainer.innerHTML =
@@ -206,13 +280,15 @@ async function searchTitles (query) {
     const data = await response.json ();
 
     if (data.Response === 'False') {
+      currentResults = [];
       statusEl.textContent = data.Error || 'No results found.';
       renderResults ([]);
       return;
     }
 
-    renderResults (data.Search || []);
-    statusEl.textContent = `Showing ${Math.min ((data.Search || []).length, 6)} results for “${trimmedQuery}”`;
+    currentResults = data.Search || [];
+    populateYearFilter (currentResults);
+    applyCurrentResults ();
   } catch (error) {
     console.error (error);
     statusEl.textContent = 'Something went wrong while loading results.';
@@ -226,5 +302,24 @@ searchForm.addEventListener ('submit', event => {
   searchTitles (searchInput.value);
 });
 
+typeFilter.addEventListener ('change', () => {
+  if (currentResults.length) {
+    applyCurrentResults ();
+  }
+});
+
+yearFilter.addEventListener ('change', () => {
+  if (currentResults.length) {
+    applyCurrentResults ();
+  }
+});
+
+sortSelect.addEventListener ('change', () => {
+  if (currentResults.length) {
+    applyCurrentResults ();
+  }
+});
+
+setControls ();
 initializeTheme ();
 searchTitles (searchInput.value);

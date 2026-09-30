@@ -45,6 +45,34 @@
                 </div>
                 <button type="submit"><span>Search</span></button>
             </form>
+
+            <div class="toolbar">
+                <label class="toolbar-field">
+                    <span>Filter</span>
+                    <select id="typeFilter" aria-label="Filter by type">
+                        <option value="all">All</option>
+                        <option value="movie">Movies</option>
+                        <option value="series">Series</option>
+                    </select>
+                </label>
+
+                <label class="toolbar-field">
+                    <span>Year</span>
+                    <select id="yearFilter" aria-label="Filter by release year">
+                        <option value="all">All years</option>
+                    </select>
+                </label>
+
+                <label class="toolbar-field">
+                    <span>Sort</span>
+                    <select id="sortSelect" aria-label="Sort results">
+                        <option value="relevance">Relevance</option>
+                        <option value="year-desc">Newest first</option>
+                        <option value="year-asc">Oldest first</option>
+                        <option value="title-asc">Title A–Z</option>
+                    </select>
+                </label>
+            </div>
         </section>
 
         <section>
