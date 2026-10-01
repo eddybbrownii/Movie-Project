@@ -1,0 +1,436 @@
+/* Adapted styles from the original project. Kept minimal edits for React layout. */
+:root {
+  --bg: #111827;
+  --bg-soft: #1f2937;
+  --bg-header: #0f172a;
+  --bg-card: #1f2937;
+  --text: #f3f4f6;
+  --text-soft: #cbd5e1;
+  --text-muted: #9ca3af;
+  --border: #374151;
+  --button: #2563eb;
+  --anim-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hover-scale: 1.1;
+  --glow-color: 37, 99, 235; /* RGB for glow; used with alpha in box-shadow */
+  --glow-alpha: 0.28;
+  --glow-drop-alpha: 0.12;
+}
+
+* {
+  box-sizing: border-box;
+}
+body,
+#root {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.site-header {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-link {
+  text-decoration: none;
+  color: inherit;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: block;
+}
+.brand-text {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.top-nav a {
+  color: var(--text-soft);
+  margin-left: 12px;
+  text-decoration: none;
+}
+
+.main-content {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+.search-panel {
+  margin-bottom: 18px;
+  padding-top: 12px; /* extra space to avoid clipping the header */
+}
+.hero-title-wrap h1 {
+  margin: 0;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.search-field-wrap {
+  position: relative;
+  flex: 1 1 260px;
+}
+.search-field-wrap input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+}
+.suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: none;
+  z-index: 5;
+}
+.suggestions.visible {
+  display: block;
+}
+.suggestion-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.suggestion-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.search-form button {
+  padding: 12px 22px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f5d76e, #d99a22);
+  color: #2c1400;
+  border: 0;
+  cursor: pointer;
+}
+
+.controls-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.5);
+}
+.control-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.toolbar-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--text-soft);
+}
+.toolbar-field select {
+  background: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.sort-slider-wrap {
+  min-width: 220px;
+  max-width: 360px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+}
+.sort-header {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+#sortSlider {
+  width: 100%;
+  margin-top: 8px;
+}
+.sort-scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  margin-top: 6px;
+}
+
+.clear-filters {
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.status {
+  min-height: 24px;
+  color: var(--text-soft);
+  margin: 12px 0;
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.result-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+.result-card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+  transition:
+    transform 260ms var(--anim-ease),
+    box-shadow 260ms var(--anim-ease);
+  transform-origin: center top;
+}
+
+/* Hover expand only on devices that support hover and if user doesn't prefer reduced motion */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .result-card {
+    transition: transform 260ms var(--anim-ease);
+  }
+  .result-card:hover {
+    z-index: 6;
+  }
+  .result-card:hover img {
+    transform: scale(var(--hover-scale));
+    box-shadow:
+      0 12px 30px rgba(var(--glow-color), var(--glow-alpha)),
+      0 2px 8px rgba(0, 0, 0, 0.35);
+    filter: drop-shadow(
+      0 6px 18px rgba(var(--glow-color), var(--glow-drop-alpha))
+    );
+    transition-timing-function: var(--anim-ease);
+  }
+}
+.result-content {
+  padding: 12px;
+}
+.result-content h3 {
+  margin: 0 0 8px;
+  color: var(--text);
+}
+.result-meta {
+  color: var(--text-soft);
+}
+.no-results,
+.error {
+  color: #fca5a5;
+  background: rgba(127, 29, 29, 0.12);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* Skeleton loaders */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.skeleton-card {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-radius: 12px;
+  padding: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.skeleton-img {
+  width: 100%;
+  height: 270px;
+  background: linear-gradient(100deg, #1f2937 0%, #111827 50%, #1f2937 100%);
+}
+.skeleton-content {
+  padding: 12px;
+}
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.06)
+  );
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.skeleton-line.short {
+  width: 50%;
+}
+.skeleton-animate {
+  animation: shimmer 1.4s infinite linear;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  .controls-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .clear-filters {
+    width: 100%;
+  }
+}
+
+/* Ticket-book animation for Home page */
+.ticket-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0 8px;
+}
+.ticket-book {
+  width: 220px;
+  height: 140px;
+  perspective: 1000px;
+  transform-origin: center center;
+}
+.book {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+}
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fef3c7, #ffd59a);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  backface-visibility: hidden;
+}
+.page.back {
+  transform: translateZ(-1px) scale(0.99);
+  background: linear-gradient(180deg, #fde68a, #fcd34d);
+}
+.page.front {
+  z-index: 5;
+}
+.page .stripe {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 16px;
+  top: 18px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+}
+.ticket-title {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  font-weight: 700;
+  color: #2c1400;
+  font-size: 0.95rem;
+}
+
+/* Landing + open */
+.ticket-book {
+  transform: translateY(-300px) scale(0.6) rotate(-8deg);
+  opacity: 0;
+}
+.ticket-wrap.play .ticket-book {
+  animation: bookLand 700ms var(--anim-ease) forwards 200ms;
+}
+.ticket-wrap.play .book {
+  animation: bookOpen 700ms var(--anim-ease) forwards 1000ms;
+}
+.ticket-wrap.play .page.front {
+  transform-origin: left center;
+  animation: pageFlip 800ms var(--anim-ease) forwards 1200ms;
+}
+
+@keyframes bookLand {
+  to {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes bookOpen {
+  0% {
+    transform: rotateY(0deg);
+  }
+  40% {
+    transform: rotateY(-6deg);
+  }
+  100% {
+    transform: rotateY(-18deg);
+  }
+}
+@keyframes pageFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  60% {
+    transform: rotateY(-90deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+    opacity: 0;
+  }
+}

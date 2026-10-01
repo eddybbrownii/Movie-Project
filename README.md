@@ -1,2 +1,0 @@
-# Movie Project
-frontend Simplified
