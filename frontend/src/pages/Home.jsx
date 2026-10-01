@@ -10,8 +10,8 @@ export default function Home () {
   }, [])
 
   return (
-    <main className="container main-content">
-      <section style={{textAlign: 'center'}}>
+    <main className="container main-content home-main">
+      <section className="home-hero">
         <div className={`ticket-wrap ${play ? 'play' : ''}`} aria-hidden={!play}>
           <div className="ticket-book">
             <div className="book">
@@ -27,12 +27,10 @@ export default function Home () {
           </div>
         </div>
 
-        <div style={{paddingTop: 12}}>
+        <div className="home-copy">
           <h1>Welcome to Movie Masters</h1>
-          <p style={{color: 'var(--text-soft)'}}>Search movies, series, and explore details powered by OMDb.</p>
-          <div style={{marginTop:16}}>
-            <Link to="/search"><button style={{padding:'10px 16px', borderRadius:8, background:'var(--button)', color:'#fff', border:0}}>Start Searching</button></Link>
-          </div>
+          <p className="home-tagline">Search movies, series, and explore details powered by OMDb.</p>
+          <Link to="/search" className="home-cta">Start Searching</Link>
         </div>
       </section>
     </main>

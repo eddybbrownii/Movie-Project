@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function SearchBar ({ query, setQuery, suggestions, onPick, onSubmit, onClose }) {
   const wrapRef = useRef(null)
+  const navigate = useNavigate()
   const isOpen = suggestions.length > 0
 
   // close the suggestion box when clicking anywhere outside the search field
@@ -34,7 +36,10 @@ export default function SearchBar ({ query, setQuery, suggestions, onPick, onSub
 
         <div className={`suggestions ${isOpen ? 'visible' : ''}`}>
           {suggestions.slice(0, 6).map((s, i) => (
-            <button key={s.imdbID || i} type="button" className="suggestion-item" onClick={() => onPick(s)}>
+            <button key={s.imdbID || i} type="button" className="suggestion-item" onClick={() => {
+              onPick(s)
+              if (s.imdbID) navigate(`/movie/${s.imdbID}`)
+            }}>
               {s.Title} ({s.Year})
             </button>
           ))}

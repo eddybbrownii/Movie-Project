@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function ResultsGrid ({ items, isLoading = false }) {
   if (isLoading) {
@@ -25,13 +26,13 @@ export default function ResultsGrid ({ items, isLoading = false }) {
   return (
     <div id="results" className="results-grid" aria-live="polite">
       {items.slice(0, 6).map(item => (
-        <article key={item.imdbID} className="result-card">
+        <Link key={item.imdbID} to={`/movie/${item.imdbID}`} className="result-card">
           <img src={item.Poster && item.Poster !== 'N/A' ? item.Poster : 'https://placehold.co/300x450/111827/ffffff?text=No+Image'} alt={item.Title} />
           <div className="result-content">
             <h3>{item.Title}</h3>
             <div className="result-meta">{item.Year} • {item.Type}</div>
           </div>
-        </article>
+        </Link>
       ))}
     </div>
   )

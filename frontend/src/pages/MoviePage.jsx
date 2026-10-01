@@ -39,9 +39,9 @@ export default function MoviePage () {
   if (isLoading) {
     return (
       <main className="container main-content">
-        <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
-          <div className="skeleton-img skeleton-animate" style={{width:260, borderRadius:8}} />
-          <div style={{flex:1}}>
+        <div className="movie-detail">
+          <div className="skeleton-img skeleton-animate movie-poster" />
+          <div className="movie-info">
             <div className="skeleton-line skeleton-animate" style={{width:'60%', height:26, marginBottom:12}} />
             <div className="skeleton-line skeleton-animate" style={{width:'30%'}} />
             <div className="skeleton-line skeleton-animate" style={{width:'80%', height:12, marginTop:12}} />
@@ -58,16 +58,16 @@ export default function MoviePage () {
 
   return (
     <main className="container main-content">
-      <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
-        <img src={movie.Poster && movie.Poster !== 'N/A' ? movie.Poster : 'https://placehold.co/300x450/111827/ffffff?text=No+Image'} alt={movie.Title} style={{width:260}}/>
-        <div>
+      <div className="movie-detail">
+        <img src={movie.Poster && movie.Poster !== 'N/A' ? movie.Poster : 'https://placehold.co/300x450/111827/ffffff?text=No+Image'} alt={movie.Title} className="movie-poster" />
+        <div className="movie-info">
           <h1>{movie.Title} ({movie.Year})</h1>
           <p><strong>Type:</strong> {movie.Type}</p>
           <p><strong>Runtime:</strong> {movie.Runtime}</p>
           <p>{movie.Plot}</p>
           <p><strong>Director:</strong> {movie.Director}</p>
           <p><strong>Actors:</strong> {movie.Actors}</p>
-          <p><Link to="/">← Back</Link></p>
+          <p><Link to="/search">← Back to search</Link></p>
         </div>
       </div>
     </main>

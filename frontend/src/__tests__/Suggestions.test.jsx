@@ -16,6 +16,7 @@ test('suggestion box closes after a suggestion is picked and stays closed', asyn
   const item = await screen.findByRole('button', { name: 'The Matrix (1999)' })
   fireEvent.click(item)
   expect(screen.queryByRole('button', { name: 'The Matrix (1999)' })).not.toBeInTheDocument()
+  expect(window.location.pathname).toBe('/movie/tt0133093')
 
   // wait past the 300ms debounce so the follow-up lookup has a chance to reopen it
   await new Promise(r => setTimeout(r, 500))
