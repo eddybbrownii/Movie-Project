@@ -26,6 +26,7 @@ export default function SearchBar ({ query, setQuery, suggestions, onPick, onSub
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Escape' && onClose) onClose() }}
           placeholder="Search by title or IMDb ID (e.g. tt0111161)"
           aria-label="Search titles"
           autoComplete="off"

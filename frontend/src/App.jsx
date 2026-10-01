@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './movie.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
@@ -30,15 +30,13 @@ export default function App () {
   const [yearFilter, setYearFilter] = useState ('all')
   const [years, setYears] = useState ([])
   const [sortMode, setSortMode] = useState (0)
-  const suggestionsRef = useRef (null)
+  const [showSuggestions, setShowSuggestions] = useState (false)
 
   useEffect (() => {
     if (!debouncedQuery || debouncedQuery.trim ().length < 2) {
       setSuggestions ([])
       return
     }
-    // don't reopen suggestions for a query that was just picked/submitted
-    if (debouncedQuery === suggestionsRef.current) return
 
     let cancelled = false
     ;(async () => {
@@ -161,15 +159,19 @@ export default function App () {
     setSortMode (0)
   }
 
+  // suggestions only open while the user is typing; picking, submitting or clicking away closes them
+  function changeQuery (value) {
+    setQuery (value)
+    setShowSuggestions (true)
+  }
+
   function closeSuggestions () {
-    suggestionsRef.current = query
-    setSuggestions ([])
+    setShowSuggestions (false)
   }
 
   function pickSuggestion (item) {
-    suggestionsRef.current = item.Title
+    setShowSuggestions (false)
     setQuery (item.Title)
-    setSuggestions ([])
     runSearch (item.Title)
   }
 
@@ -192,7 +194,7 @@ export default function App () {
                     <h1>Movie Masters</h1>
                   </div>
 
-                  <SearchBar query={query} setQuery={setQuery} suggestions={suggestions} onPick={pickSuggestion} onClose={closeSuggestions} onSubmit={submitSearch} />
+                  <SearchBar query={query} setQuery={changeQuery} suggestions={showSuggestions ? suggestions : []} onPick={pickSuggestion} onClose={closeSuggestions} onSubmit={submitSearch} />
                   <FilterPanel
                     typeFilter={typeFilter}
                     setTypeFilter={setTypeFilter}
