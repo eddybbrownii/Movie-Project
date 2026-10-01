@@ -3,6 +3,7 @@ import './movie.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import SearchBar from './components/SearchBar'
+import TicketCollage from './components/TicketCollage'
 import FilterPanel from './components/FilterPanel'
 import ResultsGrid from './components/ResultsGrid'
 import MoviePage from './pages/MoviePage'
@@ -183,6 +184,7 @@ export default function App () {
   return (
     <BrowserRouter>
       <div className="app-root">
+        <TicketCollage />
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
