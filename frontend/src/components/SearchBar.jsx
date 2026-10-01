@@ -1,6 +1,19 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
-export default function SearchBar ({ query, setQuery, suggestions, onPick, onSubmit }) {
+export default function SearchBar ({ query, setQuery, suggestions, onPick, onSubmit, onClose }) {
+  const wrapRef = useRef(null)
+  const isOpen = suggestions.length > 0
+
+  // close the suggestion box when clicking anywhere outside the search field
+  useEffect(() => {
+    if (!isOpen || !onClose) return
+    function handleClick (e) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) onClose()
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [isOpen, onClose])
+
   return (
     <form
       className="search-form"
@@ -9,7 +22,7 @@ export default function SearchBar ({ query, setQuery, suggestions, onPick, onSub
         onSubmit()
       }}
     >
-      <div className="search-field-wrap">
+      <div className="search-field-wrap" ref={wrapRef}>
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
@@ -18,7 +31,7 @@ export default function SearchBar ({ query, setQuery, suggestions, onPick, onSub
           autoComplete="off"
         />
 
-        <div className={`suggestions ${suggestions.length ? 'visible' : ''}`}>
+        <div className={`suggestions ${isOpen ? 'visible' : ''}`}>
           {suggestions.slice(0, 6).map((s, i) => (
             <button key={s.imdbID || i} type="button" className="suggestion-item" onClick={() => onPick(s)}>
               {s.Title} ({s.Year})

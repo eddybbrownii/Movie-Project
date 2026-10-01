@@ -37,6 +37,8 @@ export default function App () {
       setSuggestions ([])
       return
     }
+    // don't reopen suggestions for a query that was just picked/submitted
+    if (debouncedQuery === suggestionsRef.current) return
 
     let cancelled = false
     ;(async () => {
@@ -159,10 +161,21 @@ export default function App () {
     setSortMode (0)
   }
 
+  function closeSuggestions () {
+    suggestionsRef.current = query
+    setSuggestions ([])
+  }
+
   function pickSuggestion (item) {
+    suggestionsRef.current = item.Title
     setQuery (item.Title)
     setSuggestions ([])
     runSearch (item.Title)
+  }
+
+  function submitSearch () {
+    closeSuggestions ()
+    runSearch (query)
   }
 
   return (
@@ -179,7 +192,7 @@ export default function App () {
                     <h1>Movie Masters</h1>
                   </div>
 
-                  <SearchBar query={query} setQuery={setQuery} suggestions={suggestions} onPick={pickSuggestion} onSubmit={() => runSearch(query)} />
+                  <SearchBar query={query} setQuery={setQuery} suggestions={suggestions} onPick={pickSuggestion} onClose={closeSuggestions} onSubmit={submitSearch} />
                   <FilterPanel
                     typeFilter={typeFilter}
                     setTypeFilter={setTypeFilter}
